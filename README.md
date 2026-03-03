@@ -16,7 +16,7 @@ These Claude Code plugins help Claude navigate each of these — activating the 
 **From terminal:**
 
 ```bash
-claude plugin marketplace add st0012/ruby-skills
+claude plugin marketplace add pkordel/ruby-skills
 
 # Install both for the full experience, or just ruby-skills for version management without LSP
 claude plugin install ruby-skills@ruby-skills
@@ -26,7 +26,7 @@ claude plugin install ruby-lsp@ruby-skills
 **From a Claude session:**
 
 ```bash
-/plugin marketplace add st0012/ruby-skills
+/plugin marketplace add pkordel/ruby-skills
 /plugin install ruby-skills@ruby-skills
 /plugin install ruby-lsp@ruby-skills
 ```
