@@ -6,8 +6,7 @@
       ".erb": "erb",
       ".rake": "ruby",
       ".gemspec": "ruby",
-      ".ru": "ruby",
-      "Rakefile": "ruby"
+      ".ru": "ruby"
     }
   }
 }

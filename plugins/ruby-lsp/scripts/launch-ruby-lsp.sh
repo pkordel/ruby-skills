@@ -34,16 +34,36 @@ fi
 # Build activation prefix
 ACTIVATION="${ACTIVATION_COMMAND:-true}"
 
+# Helper to build the full command string.
+# Some version managers (rbenv, chruby, rvm) use environment-setting activation
+# commands that should be chained with &&. Others (mise, asdf, shadowenv) use
+# command-wrapper patterns where the target command is appended after "--".
+build_cmd() {
+    local cmd="$1"
+    if [[ "$ACTIVATION" == *" --" ]]; then
+        echo "$ACTIVATION $cmd"
+    else
+        echo "$ACTIVATION && $cmd"
+    fi
+}
+
+
 # Check if ruby-lsp is installed, install if needed
 # Use subshell with set +u to isolate from parent's set -u (some version managers use undefined vars)
-if ! (set +u; eval "$ACTIVATION && command -v ruby-lsp") &>/dev/null; then
+if ! (set +u; eval "$(build_cmd 'command -v ruby-lsp')") &>/dev/null; then
     echo "ruby-lsp: Installing gem..." >&2
-    if ! bash -c "$ACTIVATION && gem install ruby-lsp" >&2; then
+    if ! bash -c "$(build_cmd 'gem install ruby-lsp')" >&2; then
         echo "Error: Failed to install ruby-lsp gem" >&2
         exit 1
     fi
     echo "ruby-lsp: Installation complete." >&2
 fi
 
-# Launch ruby-lsp with version manager activation
-exec bash -c "$ACTIVATION && exec ruby-lsp"
+# Launch ruby-lsp with version manager activation.
+# For environment-setter managers, use exec to replace the bash process.
+# For wrapper managers (mise, asdf), the wrapper handles process replacement.
+if [[ "$ACTIVATION" == *" --" ]]; then
+    exec bash -c "$(build_cmd 'ruby-lsp')"
+else
+    exec bash -c "$(build_cmd 'exec ruby-lsp')"
+fi
