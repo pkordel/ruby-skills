@@ -1,0 +1,12 @@
+{
+  "name": "ruby-static-review",
+  "description": "Ruby static-analysis review battery - runs the available linters and analyzers, normalizes findings, and produces a ranked design-attention list",
+  "version": "0.1.0",
+  "author": {
+    "name": "Peter Kordel",
+    "email": "peter@polymagix.com",
+    "url": "https://github.com/pkordel"
+  },
+  "repository": "https://github.com/pkordel/ruby-skills",
+  "license": "MIT"
+}

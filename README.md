@@ -10,6 +10,7 @@ These Claude Code plugins help Claude navigate each of these — activating the 
 |--------|---------|
 | [**ruby-skills**](#ruby-skills-plugin) | Version manager detection and authoritative resource map |
 | [**ruby-lsp**](#ruby-lsp-plugin) | Ruby LSP integration for code intelligence |
+| [**ruby-static-review**](#ruby-static-review-plugin) | Static-analysis review battery with a ranked design-attention list |
 
 ## Installation
 
@@ -53,6 +54,17 @@ Builds on the ruby-skills plugin to provide [Ruby LSP](https://github.com/Shopif
 - Auto-installs the ruby-lsp gem if missing
 - Supports `.rb`, `.erb`, `.rake`, `.gemspec`, `.ru`, and `Rakefile`
 - See [plugins/ruby-lsp/README.md](plugins/ruby-lsp/README.md) for details
+
+### ruby-static-review plugin
+
+Runs the project's available static analyzers (RuboCop, Brakeman,
+bundler-audit, reek, flog, flay, rubycritic, database_consistency) as step 1 of
+a code-quality review: normalized mechanical findings plus a ranked
+design-attention list for deeper design review. Static signals prioritize that
+review — they never gate it.
+
+- Only runs tools the project or machine actually has; suggests missing ones
+- See [plugins/ruby-static-review/README.md](plugins/ruby-static-review/README.md) for details
 
 ## Acknowledgements
 

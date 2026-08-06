@@ -6,9 +6,15 @@
   },
   "metadata": {
     "description": "Ruby development skills for Claude Code",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
+    {
+      "name": "ruby-static-review",
+      "source": "./plugins/ruby-static-review",
+      "description": "Static-analysis review battery with a ranked design-attention list",
+      "version": "0.1.0"
+    },
     {
       "name": "ruby-skills",
       "source": "./plugins/ruby-skills",
