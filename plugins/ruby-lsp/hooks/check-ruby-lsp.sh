@@ -4,6 +4,13 @@
 
 set -u
 
+# With a running devcontainer, ruby-lsp runs inside it; nothing to check on the host.
+# shellcheck source=../scripts/devcontainer.sh
+source "$(dirname "${BASH_SOURCE[0]}")/../scripts/devcontainer.sh"
+if (cd "${CLAUDE_PROJECT_DIR:-$PWD}" && devcontainer_main_folder) >/dev/null; then
+    exit 0
+fi
+
 # Find ruby-skills detect.sh
 DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-manager/detect.sh 2>/dev/null | head -1)
 

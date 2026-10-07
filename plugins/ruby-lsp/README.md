@@ -41,6 +41,23 @@ See [Known Issues](#known-issues) for details.
 2. **First LSP use:** Auto-installs ruby-lsp gem if missing (progress shown in output)
 3. **Every LSP use:** Activates correct Ruby version, then runs ruby-lsp
 
+## Devcontainers
+
+When the project has a devcontainer config (`.devcontainer/devcontainer.json`
+or `.devcontainer.json`) and its container is running, ruby-lsp runs inside
+the container instead, with the project's Ruby and gems. A small proxy
+(`scripts/devcontainer-ruby-lsp.py`) translates host paths to container paths
+and back, so Claude keeps working with host paths.
+
+- Requires the `devcontainer` CLI, `docker` and `python3` on the host, and
+  `ruby-lsp` in the container (falls back to `bundle exec ruby-lsp`).
+- Git worktrees work: each resolves to its own path in the container.
+  Worktrees nested inside the checkout are excluded from indexing.
+- Definitions inside gems point to container paths, which don't exist on the
+  host.
+- If the container isn't running when the session starts, the host setup
+  below is used. Start the container and restart Claude Code.
+
 ## Available LSP Operations
 
 Once enabled, Claude can use these LSP-powered operations:

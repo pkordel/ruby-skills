@@ -4,6 +4,17 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${CLAUDE_PROJECT_DIR:-$PWD}"
+
+# Projects with a running devcontainer: run ruby-lsp inside it, so it sees the
+# project's Ruby and gems. Host paths are translated by the proxy.
+# shellcheck source=devcontainer.sh
+source "$SCRIPT_DIR/devcontainer.sh"
+if MAIN_FOLDER=$(devcontainer_main_folder); then
+    exec python3 -I "$SCRIPT_DIR/devcontainer-ruby-lsp.py" "$MAIN_FOLDER" "$@"
+fi
+
 # Find ruby-skills detect.sh
 DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-manager/detect.sh 2>/dev/null | head -1)
 
