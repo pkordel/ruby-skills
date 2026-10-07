@@ -17,23 +17,8 @@ claude plugin install ruby-skills@ruby-skills
 claude plugin install ruby-lsp@ruby-skills
 ```
 
-## Enabling the LSP Tool
-
-> **Important:** Claude Code's LSP Tool must be enabled for this plugin to work.
-
-Set the environment variable before starting Claude:
-
-```bash
-ENABLE_LSP_TOOL=1 claude
-```
-
-Or add to your shell profile (~/.zshrc, ~/.bashrc):
-
-```bash
-export ENABLE_LSP_TOOL=1
-```
-
-See [Known Issues](#known-issues) for details.
+Claude Code turns on its LSP tool once the plugin's language server starts;
+no environment variable is needed. Start a new session after installing.
 
 ## How It Works
 
@@ -60,7 +45,7 @@ and back, so Claude keeps working with host paths.
 
 ## Available LSP Operations
 
-Once enabled, Claude can use these LSP-powered operations:
+Once the server is running, Claude can use these LSP-powered operations:
 
 | Operation | Description |
 |-----------|-------------|
@@ -84,7 +69,10 @@ Supported managers: shadowenv, chruby, rbenv, rvm, asdf, rv, mise
 
 ### "No LSP server available"
 
-Make sure `ENABLE_LSP_TOOL=1` is set. See [Enabling the LSP Tool](#enabling-the-lsp-tool).
+Open `/plugin` and check the **Errors** tab, or start Claude Code with
+`claude --debug` and look for `LSP server ... failed to start`. If another
+enabled plugin also claims `.rb` files (such as `ruby-lsp@claude-plugins-official`),
+only the first one registered is used; disable the other.
 
 ### "ruby-skills plugin not found"
 
@@ -111,16 +99,6 @@ Restart Claude Code to re-detect the Ruby environment.
 - `Rakefile` - Rake build files
 
 ## Known Issues
-
-### LSP Tool requires environment variable
-
-Claude Code's LSP Tool has a [known race condition](https://github.com/anthropics/claude-code/issues/14803) where the LSP Manager initializes before plugins load. The `ENABLE_LSP_TOOL=1` environment variable works around this.
-
-**Alternative workaround:** Use the [community patch](https://github.com/Piebald-AI/claude-code-lsps):
-
-```bash
-npx tweakcc --apply
-```
 
 ### LSP diagnostics only in IDE mode
 

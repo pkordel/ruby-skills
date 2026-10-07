@@ -177,8 +177,6 @@ Expected behavior. Claude Code runs each Bash command in a fresh shell. Always c
 
 The `plugins/ruby-lsp/` directory contains a Claude Code LSP plugin that provides Ruby language server integration. It depends on the `ruby-skills` plugin for Ruby environment detection.
 
-**Important:** Requires `ENABLE_LSP_TOOL=1` environment variable due to a known Claude Code race condition bug.
-
 ### Architecture
 
 ```
@@ -217,14 +215,12 @@ plugins/ruby-lsp/
 
 **Manual (plugin-level):**
 - Install both plugins from marketplace
-- Ensure `ENABLE_LSP_TOOL=1` is set
 - Test in Ruby project: hover, go-to-definition, diagnostics
 - Test auto-install flow by uninstalling ruby-lsp gem first
 - Test multiple manager scenario by removing preference
 
 ### Known Limitations
 
-- Requires `ENABLE_LSP_TOOL=1` environment variable (Claude Code bug workaround)
 - `${CLAUDE_PLUGIN_ROOT}` in `.lsp.json` is used for the launch script path
 - Each Bash command runs in fresh shell, so activation must be chained with ruby-lsp launch
 - Some version managers (like chruby) use undefined variables, requiring `set +u` in subshells

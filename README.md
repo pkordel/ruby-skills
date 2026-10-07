@@ -48,9 +48,6 @@ See the [technical reference](plugins/ruby-skills/skills/ruby-version-manager/RE
 
 Builds on the ruby-skills plugin to provide [Ruby LSP](https://github.com/Shopify/ruby-lsp) integration — hover documentation, go-to-definition, and diagnostics.
 
-> [!NOTE]
-> Requires `ENABLE_LSP_TOOL=1` environment variable due to a known Claude Code issue. See [Known Issues](plugins/ruby-lsp/README.md#known-issues).
-
 - Auto-installs the ruby-lsp gem if missing
 - Supports `.rb`, `.erb`, `.rake`, `.gemspec`, `.ru`, and `Rakefile`
 - See [plugins/ruby-lsp/README.md](plugins/ruby-lsp/README.md) for details
