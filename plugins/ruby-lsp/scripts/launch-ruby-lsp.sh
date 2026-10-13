@@ -16,9 +16,16 @@ if MAIN_FOLDER=$(devcontainer_main_folder); then
 fi
 
 # Find ruby-skills detect.sh
-DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-manager/detect.sh 2>/dev/null | head -1)
+# (|| true: under pipefail a failed ls would exit the script silently)
+DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-manager/detect.sh 2>/dev/null | head -1 || true)
 
+# Without ruby-skills, use a ruby-lsp already on PATH (e.g. inside the
+# devcontainer, where Ruby is set up for the project).
 if [[ -z "$DETECT_SCRIPT" ]]; then
+    case "$(path_ruby_lsp_command)" in
+        ruby-lsp) exec ruby-lsp "$@" ;;
+        bundle) exec bundle exec ruby-lsp "$@" ;;
+    esac
     echo "Error: ruby-skills plugin not found." >&2
     echo "Install with: claude plugin install ruby-skills" >&2
     exit 1

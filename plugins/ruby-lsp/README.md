@@ -4,7 +4,8 @@ Ruby LSP integration with automatic Ruby version manager detection.
 
 ## Prerequisites
 
-**Required:** Install the ruby-skills plugin first:
+**Required** unless `ruby-lsp` is already on `PATH` (or bundled by the
+project) or a devcontainer is used (see below): install the ruby-skills plugin:
 
 ```bash
 claude plugin marketplace add st0012/ruby-skills
@@ -42,6 +43,9 @@ and back, so Claude keeps working with host paths.
   host.
 - If the container isn't running when the session starts, the host setup
   below is used. Start the container and restart Claude Code.
+- When Claude Code itself runs inside the container, there is no
+  `devcontainer` CLI. Without ruby-skills, the launcher then runs the
+  `ruby-lsp` on `PATH`, or `bundle exec ruby-lsp` when the project bundles it.
 
 ## Available LSP Operations
 

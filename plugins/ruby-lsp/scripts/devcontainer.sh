@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Shared devcontainer detection for the ruby-lsp launcher and session-start check.
-# Source this file, then call devcontainer_main_folder.
+# Shared detection for the ruby-lsp launcher and session-start check.
+# Source this file, then call devcontainer_main_folder or path_ruby_lsp_command.
 
 # Prints the host path of the main checkout when the project has a devcontainer
 # config and its container is running. Returns 1 otherwise.
@@ -18,4 +18,17 @@ devcontainer_main_folder() {
     [[ -n "$(docker ps -q --filter "label=devcontainer.local_folder=$main" 2>/dev/null)" ]] || return 1
 
     printf '%s\n' "$main"
+}
+
+# Prints how to run the ruby-lsp already reachable from PATH: "ruby-lsp", or
+# "bundle" when the project bundles it. Returns 1 when neither works. Used
+# without ruby-skills, e.g. when Claude Code itself runs inside the container.
+path_ruby_lsp_command() {
+    if command -v ruby-lsp >/dev/null 2>&1; then
+        echo ruby-lsp
+    elif command -v bundle >/dev/null 2>&1 && grep -qs '^    ruby-lsp ' Gemfile.lock; then
+        echo bundle
+    else
+        return 1
+    fi
 }

@@ -15,6 +15,10 @@ fi
 DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-manager/detect.sh 2>/dev/null | head -1)
 
 if [[ -z "$DETECT_SCRIPT" ]]; then
+    # The launcher uses a ruby-lsp on PATH in that case.
+    if (cd "${CLAUDE_PROJECT_DIR:-$PWD}" && path_ruby_lsp_command) >/dev/null; then
+        exit 0
+    fi
     echo "ruby-lsp plugin requires ruby-skills. Install: claude plugin install ruby-skills" >&2
     exit 0
 fi
