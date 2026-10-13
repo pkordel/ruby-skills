@@ -32,13 +32,12 @@ no environment variable is needed. Start a new session after installing.
 When the project has a devcontainer config (`.devcontainer/devcontainer.json`
 or `.devcontainer.json`) and its container is running, ruby-lsp runs inside
 the container instead, with the project's Ruby and gems. A small proxy
-(`scripts/devcontainer-ruby-lsp.py`) translates host paths to container paths
+(`scripts/ruby-lsp-proxy.py`) translates host paths to container paths
 and back, so Claude keeps working with host paths.
 
 - Requires the `devcontainer` CLI, `docker` and `python3` on the host, and
   `ruby-lsp` in the container (falls back to `bundle exec ruby-lsp`).
 - Git worktrees work: each resolves to its own path in the container.
-  Worktrees nested inside the checkout are excluded from indexing.
 - Definitions inside gems point to container paths, which don't exist on the
   host.
 - If the container isn't running when the session starts, the host setup
@@ -46,6 +45,16 @@ and back, so Claude keeps working with host paths.
 - When Claude Code itself runs inside the container, there is no
   `devcontainer` CLI. Without ruby-skills, the launcher then runs the
   `ruby-lsp` on `PATH`, or `bundle exec ruby-lsp` when the project bundles it.
+
+## Nested Git Worktrees
+
+Git worktrees inside the checkout (for example `wt/<branch>/`) would otherwise
+show every symbol once per worktree. The launcher runs ruby-lsp through
+`scripts/ruby-lsp-proxy.py`, which excludes them from indexing and drops
+references located in them, since ruby-lsp searches every file for references.
+This applies on the host, through a devcontainer and inside a container, and
+also finds worktrees whose recorded path is a host path. Without `python3`,
+ruby-lsp runs directly and nothing is excluded.
 
 ## Available LSP Operations
 

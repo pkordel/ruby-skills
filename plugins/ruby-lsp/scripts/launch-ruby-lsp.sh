@@ -12,8 +12,17 @@ cd "${CLAUDE_PROJECT_DIR:-$PWD}"
 # shellcheck source=devcontainer.sh
 source "$SCRIPT_DIR/devcontainer.sh"
 if MAIN_FOLDER=$(devcontainer_main_folder); then
-    exec python3 -I "$SCRIPT_DIR/devcontainer-ruby-lsp.py" "$MAIN_FOLDER" "$@"
+    exec python3 -I "$SCRIPT_DIR/ruby-lsp-proxy.py" --devcontainer "$MAIN_FOLDER" "$@"
 fi
+
+# Run the server through the proxy, which excludes git worktrees nested inside
+# the checkout from indexing. Without python3, run it directly.
+serve() {
+    if command -v python3 >/dev/null 2>&1; then
+        exec python3 -I "$SCRIPT_DIR/ruby-lsp-proxy.py" -- "$@"
+    fi
+    exec "$@"
+}
 
 # Find ruby-skills detect.sh
 # (|| true: under pipefail a failed ls would exit the script silently)
@@ -23,8 +32,8 @@ DETECT_SCRIPT=$(ls ~/.claude/plugins/cache/*/ruby-skills/*/skills/ruby-version-m
 # devcontainer, where Ruby is set up for the project).
 if [[ -z "$DETECT_SCRIPT" ]]; then
     case "$(path_ruby_lsp_command)" in
-        ruby-lsp) exec ruby-lsp "$@" ;;
-        bundle) exec bundle exec ruby-lsp "$@" ;;
+        ruby-lsp) serve ruby-lsp "$@" ;;
+        bundle) serve bundle exec ruby-lsp "$@" ;;
     esac
     echo "Error: ruby-skills plugin not found." >&2
     echo "Install with: claude plugin install ruby-skills" >&2
@@ -81,7 +90,7 @@ fi
 # For environment-setter managers, use exec to replace the bash process.
 # For wrapper managers (mise, asdf), the wrapper handles process replacement.
 if [[ "$ACTIVATION" == *" --" ]]; then
-    exec bash -c "$(build_cmd 'ruby-lsp')"
+    serve bash -c "$(build_cmd 'ruby-lsp')"
 else
-    exec bash -c "$(build_cmd 'exec ruby-lsp')"
+    serve bash -c "$(build_cmd 'exec ruby-lsp')"
 fi
